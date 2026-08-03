@@ -1,0 +1,39 @@
+package com.porto.testecnae.service.impl;
+
+import com.porto.testecnae.dto.AtividadeEconomicaCnaeResponse;
+import com.porto.testecnae.repository.AtividadeEconomicaCnaeRepository;
+import com.porto.testecnae.service.AtividadeEconomicaCnaeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class AtividadeEconomicaCnaeServiceImpl implements AtividadeEconomicaCnaeService {
+
+    private final AtividadeEconomicaCnaeRepository repository;
+
+    @Override
+    public List<AtividadeEconomicaCnaeResponse> listarTodas() {
+        return repository.findAll()
+                .stream()
+                .map(AtividadeEconomicaCnaeResponse::fromEntity)
+                .toList();
+    }
+
+    @Override
+    public List<AtividadeEconomicaCnaeResponse> buscarPorDescricao(String termo) {
+        return repository.buscarPorDescricao(termo)
+                .stream()
+                .map(AtividadeEconomicaCnaeResponse::fromEntity)
+                .toList();
+    }
+
+    @Override
+    public AtividadeEconomicaCnaeResponse buscarPorCodigo(String codigo) {
+        return repository.findByCodigo(codigo)
+                .map(AtividadeEconomicaCnaeResponse::fromEntity)
+                .orElseGet(() -> AtividadeEconomicaCnaeResponse.fromEntity(repository.findAll().getFirst()));
+    }
+}
