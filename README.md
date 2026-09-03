@@ -74,3 +74,61 @@ Objetivo:
 - Codigo corrigido em um branch ou pull request.
 - Breve explicacao tecnica das alteracoes.
 - Evidencias de execucao, como comandos usados, respostas dos endpoints ou testes.
+
+## Diagnóstico e correções realizadas
+
+### 1. Busca parcial de CNAE
+
+#### Problema
+A consulta original utilizava o wildcard apenas após o termo:
+
+LIKE 'termo%'
+
+Isso permitia localizar somente descrições iniciadas pelo valor pesquisado.
+
+#### Causa raiz
+A implementação da query não correspondia ao requisito de busca por
+ocorrência em qualquer parte da descrição.
+
+#### Correção
+A consulta foi alterada para:
+
+LIKE '%termo%'
+
+mantendo a utilização de lower() para comparação case-insensitive.
+
+---
+
+### 2. Consulta de CNAE inexistente
+
+#### Problema
+Quando um código CNAE não era encontrado, a aplicação retornava
+o primeiro CNAE existente no banco.
+
+#### Impacto
+A API retornava um recurso diferente do solicitado, mascarando
+a inexistência do código informado.
+
+#### Correção
+O fallback foi removido e substituído por CnaeNotFoundException.
+
+O tratamento HTTP foi centralizado através de @RestControllerAdvice,
+retornando HTTP 404 e ProblemDetail.
+
+---
+
+### 3. Cadastro secundário com CNAE inexistente
+
+#### Problema
+Ao cadastrar utilizando um CNAE inexistente, a aplicação utilizava
+silenciosamente o primeiro CNAE existente.
+
+#### Impacto
+O cadastro era persistido associado a um CNAE diferente daquele
+enviado pelo cliente.
+
+#### Correção
+A operação passou a exigir a existência do CNAE antes da persistência.
+
+A busca foi centralizada no método buscarCnae(), utilizado tanto no
+cadastro quanto na validação, evitando duplicação da regra.
