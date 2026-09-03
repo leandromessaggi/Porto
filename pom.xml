@@ -13,7 +13,7 @@
 
     <groupId>com.porto</groupId>
     <artifactId>teste-cnae</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>teste-cnae</name>
     <description>Microservico para teste tecnico de LT e Analista</description>
 
@@ -54,6 +54,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.22.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
